@@ -10,15 +10,12 @@ public class Juego {
 	
 	private ArrayList<Jugador> ranking;
 
-	public Juego(String dificultad) {
-		if (dificultad.equals("Principiante")) {
-			this.grilla = new Color[5][5];
-		} else if (dificultad.equals("Intermedio")) {
-			this.grilla = new Color[6][6];
-		} else if (dificultad.equals("Avanzado")) {
-			this.grilla = new Color[7][7];
-		} else {
-			throw new IllegalArgumentException("Dificultad inválida: " + dificultad);
+	public Juego(Dificultad dificultad) {
+		switch (dificultad) {
+        case PRINCIPIANTE -> this.grilla = new Color[5][5];
+        case INTERMEDIO -> this.grilla = new Color[6][6];
+        case AVANZADO -> this.grilla = new Color[7][7];
+        default -> throw new IllegalArgumentException("Dificultad inválida: " + dificultad);
 		}
 
 

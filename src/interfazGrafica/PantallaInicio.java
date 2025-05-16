@@ -5,11 +5,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import personalizacion.Estilos;
+import personalizacion.UtilidadesUI;
+import logica.Dificultad;
 
 public class PantallaInicio extends JFrame {
     private static final long serialVersionUID = 1L;
-    private JComboBox<String> comboBoxDificultad;
+    private JComboBox<Dificultad> comboBoxDificultad;
     private JTextField textFieldNombre;
     private JPanel panelInicio, panelDatos;
 
@@ -30,8 +31,10 @@ public class PantallaInicio extends JFrame {
     }
 
     private void inicializarComponentes() {
-        comboBoxDificultad = new JComboBox<>(new String[]{"Seleccionar", "Principiante", "Intermedio", "Avanzado"});
-        comboBoxDificultad.setFont(Estilos.cargarFuentePersonalizada(10f));
+        comboBoxDificultad = new JComboBox<>(Dificultad.values());
+        comboBoxDificultad.insertItemAt(null, 0);
+        comboBoxDificultad.setSelectedIndex(0);
+        comboBoxDificultad.setFont(UtilidadesUI.cargarFuentePersonalizada(10f));
         comboBoxDificultad.setBackground(Color.BLACK);
         comboBoxDificultad.setForeground(Color.YELLOW);
     }
@@ -41,16 +44,16 @@ public class PantallaInicio extends JFrame {
         panelInicio.setBounds(0, 0, 500, 500);
         panelInicio.setBackground(Color.BLACK);
 
-        JLabel lblBienvenido = crearEtiqueta("¡Bienvenido!", 24f, 100, 10, 300, 50, Color.YELLOW);
-        JLabel lblTitulo = crearEtiqueta("Un nuevo reto te espera", 20f, 10, 48, 480, 50, Color.YELLOW);
-        JLabel lblListo = crearEtiqueta("¿Estas Listo?", 13f, 165, 405, 170, 40, Color.YELLOW);
+        JLabel lblBienvenido = UtilidadesUI.crearEtiqueta("¡Bienvenido!", 24f, 100, 10, 300, 50, Color.YELLOW);
+        JLabel lblTitulo = UtilidadesUI.crearEtiqueta("Un nuevo reto te espera", 20f, 10, 48, 480, 50, Color.YELLOW);
+        JLabel lblListo = UtilidadesUI.crearEtiqueta("¿Estas Listo?", 13f, 165, 405, 170, 40, Color.YELLOW);
 
         JLabel gifLabel = new JLabel(new ImageIcon(getClass().getResource("/interfazGrafica/GIFHisteria.gif")));
         gifLabel.setBounds(100, 95, 300, 300);
         panelInicio.add(gifLabel);
 
-        JButton btnSi = crearBoton("Si", 125, 450, 60, 40, e -> mostrarPanel(true));
-        JButton btnNo = crearBoton("No", 325, 450, 60, 40, e -> dispose());
+        JButton btnSi = UtilidadesUI.crearBoton("Si", 125, 450, 60, 40, e -> mostrarPanel(true));
+        JButton btnNo = UtilidadesUI.crearBoton("No", 325, 450, 60, 40, e -> dispose());
 
         panelInicio.add(lblBienvenido);
         panelInicio.add(lblTitulo);
@@ -68,22 +71,22 @@ public class PantallaInicio extends JFrame {
 
         textFieldNombre = new JTextField("Nombre o Apodo");
         textFieldNombre.setBounds(300, 271, 160, 40);
-        textFieldNombre.setFont(Estilos.cargarFuentePersonalizada(10f));
+        textFieldNombre.setFont(UtilidadesUI.cargarFuentePersonalizada(10f));
         textFieldNombre.setBackground(Color.BLACK);
         textFieldNombre.setForeground(Color.YELLOW);
-        Estilos.personalizarCursor(textFieldNombre, Color.YELLOW, 7);
+        UtilidadesUI.personalizarCursor(textFieldNombre, Color.YELLOW, 7);
         agregarListenersTextField();
 
-        JLabel lblNombre = crearEtiqueta("Ingrese su nombre", 10f, 20, 270, 190, 40, Color.YELLOW);
-        JLabel lblDificultad = crearEtiqueta("Seleccione la dificultad", 10f, 20, 170, 270, 40, Color.YELLOW);
-        JLabel lblHisteria = crearEtiqueta("Histeria", 40f, 84, 34, 350, 90, Color.YELLOW);
+        JLabel lblNombre = UtilidadesUI.crearEtiqueta("Ingrese su nombre", 10f, 20, 270, 190, 40, Color.YELLOW);
+        JLabel lblDificultad = UtilidadesUI.crearEtiqueta("Seleccione la dificultad", 10f, 20, 170, 270, 40, Color.YELLOW);
+        JLabel lblHisteria = UtilidadesUI.crearEtiqueta("Histeria", 40f, 84, 34, 350, 90, Color.YELLOW);
 
         comboBoxDificultad.setBounds(300, 170, 160, 40);
         panelDatos.add(comboBoxDificultad);
 
-        JButton btnComenzar = crearBoton("Comenzar", 300, 350, 160, 40, this::accionComenzar);
-        JButton btnComoJugar = crearBoton("Cómo jugar", 20, 350, 170, 40, this::accionComoJugar);
-        JButton btnSalir = crearBoton("Salir", 200, 420, 90, 40, e -> dispose());
+        JButton btnComenzar = UtilidadesUI.crearBoton("Comenzar", 300, 350, 160, 40, this::accionComenzar);
+        JButton btnComoJugar = UtilidadesUI.crearBoton("Cómo jugar", 20, 350, 170, 40, this::accionComoJugar);
+        JButton btnSalir = UtilidadesUI.crearBoton("Salir", 200, 420, 90, 40, e -> dispose());
 
         panelDatos.add(textFieldNombre);
         panelDatos.add(lblNombre);
@@ -118,32 +121,32 @@ public class PantallaInicio extends JFrame {
     private void verificarNombre() {
         String nombre = textFieldNombre.getText();
         if (nombre.length() > 12 && !nombre.equals("Nombre o Apodo") && !nombre.isEmpty()) {
-            Estilos.mostrarMensaje("Nombre o apodo demasiado largo", "Error", JOptionPane.ERROR_MESSAGE);
+            UtilidadesUI.mostrarMensaje("Nombre o apodo demasiado largo", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void accionComenzar(ActionEvent e) {
-        String dificultad = comboBoxDificultad.getSelectedItem().toString();
+        Dificultad dificultad = (Dificultad) comboBoxDificultad.getSelectedItem();
         String nombre = textFieldNombre.getText();
         String titulo = "Error";
 
-        if (dificultad.equals("Seleccionar") && nombre.equals("Nombre o Apodo")) {
-            Estilos.mostrarMensaje("Por favor, siga las instrucciones", titulo, JOptionPane.ERROR_MESSAGE);
+        if (dificultad == null && nombre.equals("Nombre o Apodo")) {
+            UtilidadesUI.mostrarMensaje("Por favor, siga las instrucciones", titulo, JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (dificultad.equals("Seleccionar")) {
-            Estilos.mostrarMensaje("Por favor, selecciona una dificultad.", titulo, JOptionPane.ERROR_MESSAGE);
+        if (dificultad == null) {
+            UtilidadesUI.mostrarMensaje("Por favor, selecciona una dificultad.", titulo, JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (nombre.equals("Nombre o Apodo") || nombre.isEmpty()) {
-            Estilos.mostrarMensaje("Por favor, ingrese su nombre o apodo.", titulo, JOptionPane.ERROR_MESSAGE);
+            UtilidadesUI.mostrarMensaje("Por favor, ingrese su nombre o apodo.", titulo, JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (nombre.length() > 12) {
-            Estilos.mostrarMensaje("Nombre o apodo demasiado largo, cambialo", titulo, JOptionPane.ERROR_MESSAGE);
+            UtilidadesUI.mostrarMensaje("Nombre o apodo demasiado largo, cambialo", titulo, JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -170,26 +173,7 @@ public class PantallaInicio extends JFrame {
         ¡así que usalas con sabiduría!
         """;
 
-        Estilos.mostrarMensaje(mensaje, "Reglas del juego", JOptionPane.QUESTION_MESSAGE);
-    }
-
-    private JLabel crearEtiqueta(String texto, float tamaño, int x, int y, int ancho, int alto, Color colorInicial) {
-        JLabel label = new JLabel(texto, SwingConstants.CENTER);
-        label.setFont(Estilos.cargarFuentePersonalizada(tamaño));
-        label.setForeground(Color.WHITE);
-        label.setBounds(x, y, ancho, alto);
-        Estilos.aplicarDegradado(label, colorInicial, Color.RED, colorInicial);
-        return label;
-    }
-
-    private JButton crearBoton(String texto, int x, int y, int ancho, int alto, ActionListener accion) {
-        JButton boton = new JButton(texto);
-        boton.setBounds(x, y, ancho, alto);
-        boton.setFont(Estilos.cargarFuentePersonalizada(15f));
-        boton.addActionListener(accion);
-        Estilos.aplicarDegradado(boton, Color.YELLOW, Color.RED, Color.YELLOW);
-        Estilos.personalizarBoton(boton);
-        return boton;
+        UtilidadesUI.mostrarMensaje(mensaje, "Reglas del juego", JOptionPane.QUESTION_MESSAGE);
     }
 
     private void mostrarPanel(boolean mostrarDatos) {

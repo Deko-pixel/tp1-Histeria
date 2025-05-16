@@ -16,9 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logica.Dificultad;
 import logica.Juego;
 import logica.Jugador;
-import personalizacion.Estilos;
+import personalizacion.UtilidadesUI;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -36,24 +38,24 @@ public class PantallaJuego extends JFrame {
 	private JLabel lblTiempo;
 	private Timer timer;
 
-	public PantallaJuego(String dificultadSeleccionada, String nombre) {
+	public PantallaJuego(Dificultad dificultad, String nombre) {
 
-		this.juego = new Juego(dificultadSeleccionada);
+		this.juego = new Juego(dificultad);
 		this.jugador = new Jugador(nombre);
 		this.tamanioGrilla = juego.obtenerTamano(); // Usa el tamaño del juego
 		this.matrizBotones = new JButton[tamanioGrilla][tamanioGrilla];
 		this.siguienteColor = juego.obtenerSiguienteColor(); // Establecer el siguiente color
 
-    	setTitle("Histeria - Dificultad: "+dificultadSeleccionada+" - Dávalos, Galván, Götz del Federico, Valdiviezo");    	
+    	setTitle("Histeria - Dificultad: "+dificultad+" - Dávalos, Galván, Götz del Federico, Valdiviezo");    	
 		setBounds(400, 100, 800, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(null);
 
 		JPanel panelDeBotones = new JPanel();
-		panelDeBotones.setBounds(220, 30, 5 * 70, 5 * 70);// tamanioGrilla *70
+		panelDeBotones.setBounds(220, 30, tamanioGrilla * 70, tamanioGrilla * 70);// tamanioGrilla *70
 		panelDeBotones.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelDeBotones.setLayout(new GridLayout(5, 5, 3, 3));// tamanioGrilla
+		panelDeBotones.setLayout(new GridLayout(tamanioGrilla, tamanioGrilla, 3, 3));// tamanioGrilla
 		panelDeBotones.setBackground(Color.BLACK);
 		getContentPane().add(panelDeBotones);
 
@@ -74,15 +76,15 @@ public class PantallaJuego extends JFrame {
 		etiquetaPista.setForeground(new Color(255, 255, 255));
 		etiquetaPista.setHorizontalAlignment(SwingConstants.CENTER);
 		etiquetaPista.setBounds(0, 10, 130, 20);
-		etiquetaPista.setFont(Estilos.cargarFuentePersonalizada(9f));
-		Estilos.aplicarDegradado(etiquetaPista, Color.YELLOW, Color.RED, Color.YELLOW);
+		etiquetaPista.setFont(UtilidadesUI.cargarFuentePersonalizada(9f));
+		UtilidadesUI.aplicarDegradado(etiquetaPista, Color.YELLOW, Color.RED, Color.YELLOW);
 		panelPista.add(etiquetaPista);
 
 		// Mostrar el siguiente color cuando se presione el botón "Pista"
 		JButton btnPista = new JButton("Pista");
-		btnPista.setFont(Estilos.cargarFuentePersonalizada(20f));
-		Estilos.aplicarDegradado(btnPista, Color.YELLOW, Color.RED, Color.YELLOW);
-		Estilos.personalizarBoton(btnPista);
+		btnPista.setFont(UtilidadesUI.cargarFuentePersonalizada(20f));
+		UtilidadesUI.aplicarDegradado(btnPista, Color.YELLOW, Color.RED, Color.YELLOW);
+		UtilidadesUI.personalizarBoton(btnPista);
 		btnPista.addActionListener(e -> {
 			if (!panelPista.isVisible()) {
 				jugador.contarPistasUsadas();
@@ -102,15 +104,15 @@ public class PantallaJuego extends JFrame {
 		JLabel lblTurnos = new JLabel("Turnos: 0");
 		lblTurnos.setForeground(new Color(255, 255, 255));
 		lblTurnos.setBounds(0, 80, 130, 20);
-		lblTurnos.setFont(Estilos.cargarFuentePersonalizada(10f));
-		Estilos.aplicarDegradado(lblTurnos, Color.YELLOW, Color.RED, Color.YELLOW);
+		lblTurnos.setFont(UtilidadesUI.cargarFuentePersonalizada(10f));
+		UtilidadesUI.aplicarDegradado(lblTurnos, Color.YELLOW, Color.RED, Color.YELLOW);
 		panelSuperior.add(lblTurnos);
 		
 		JLabel lblTiempo = new JLabel("Tiempo: ");
 		lblTiempo.setForeground(new Color(255, 255, 255));
 		lblTiempo.setBounds(0, 50, 130, 20);
-		lblTiempo.setFont(Estilos.cargarFuentePersonalizada(10f));
-		Estilos.aplicarDegradado(lblTiempo, Color.YELLOW, Color.RED, Color.YELLOW);
+		lblTiempo.setFont(UtilidadesUI.cargarFuentePersonalizada(10f));
+		UtilidadesUI.aplicarDegradado(lblTiempo, Color.YELLOW, Color.RED, Color.YELLOW);
 		panelSuperior.add(lblTiempo);
 
 
@@ -120,8 +122,8 @@ public class PantallaJuego extends JFrame {
 		lblNombre.setForeground(new Color(255, 255, 255));
 		lblNombre.setText(nombre);
 		lblNombre.setBounds(0, 20, 130, 20);
-		lblNombre.setFont(Estilos.cargarFuentePersonalizada(10f));
-		Estilos.aplicarDegradado(lblNombre, Color.YELLOW, Color.RED, Color.YELLOW);
+		lblNombre.setFont(UtilidadesUI.cargarFuentePersonalizada(10f));
+		UtilidadesUI.aplicarDegradado(lblNombre, Color.YELLOW, Color.RED, Color.YELLOW);
 		panelSuperior.add(lblNombre);
 
 		timer = new Timer(1000, new ActionListener() { // Timer tick por segundo
