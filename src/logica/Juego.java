@@ -6,8 +6,6 @@ import java.util.ArrayList;
 public class Juego {
 	private Color[][] grilla;
 	private Color siguienteColor;
-
-	
 	private ArrayList<Jugador> ranking;
 
 	public Juego(Dificultad dificultad) {
@@ -17,7 +15,6 @@ public class Juego {
         case AVANZADO -> this.grilla = new Color[7][7];
         default -> throw new IllegalArgumentException("Dificultad inválida: " + dificultad);
 		}
-
 
 		this.siguienteColor = obtenerColorAleatorio();
 		this.ranking = new ArrayList<Jugador>(10);
@@ -30,7 +27,6 @@ public class Juego {
 		}
 		
 	}
-
 
 	public int obtenerTamano() {
 		return this.grilla.length;
@@ -66,6 +62,50 @@ public class Juego {
 
 	}
 
+	public boolean grillaEstaCompleta() {
+		for (int fila = 0; fila < obtenerTamano(); fila++) {
+			for (int columna = 0; columna < obtenerTamano(); columna++) {
+				if (obtenerColor(fila, columna) == Color.GRAY) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public Color obtenerSiguienteColor() {
+		return this.siguienteColor;
+	}
+
+	public ArrayList<Jugador> obtenerRanking() {
+		return this.ranking;
+	}
+	
+	
+	public void actualizarRanking(Jugador jugador) {
+
+	    // Buscar la posición correcta
+	    int posicion = 0;
+	    while (posicion < ranking.size() && jugador.obtenerPuntajeFinal() < ranking.get(posicion).obtenerPuntajeFinal()) {
+	        posicion++;
+	    }
+
+	    if (posicion <= 10) {
+	    	ranking.add(posicion, jugador);
+	    	ranking.remove(ranking.size() - 1); //Eliminar el último para conservar solo 10 siempre			
+		}
+	        
+	    
+	}
+	
+	private boolean posicionInvalida(int posX) {
+		return posX < 0 || posX >= obtenerTamano();
+	}
+
+	private boolean mismoColor(Color colA, Color colB) {
+		return colA.equals(colB);
+	}
+	
 	private boolean hayVecinosDelMismoColor(int fila, int columna) {
 		boolean esMismoColor = false;
 
@@ -94,50 +134,6 @@ public class Juego {
 			esMismoColor = true;
 		}
 		return esMismoColor;
-	}
-
-	public boolean grillaEstaCompleta() {
-		for (int fila = 0; fila < obtenerTamano(); fila++) {
-			for (int columna = 0; columna < obtenerTamano(); columna++) {
-				if (obtenerColor(fila, columna) == Color.GRAY) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	public Color obtenerSiguienteColor() {
-		return this.siguienteColor;
-	}
-
-	private boolean posicionInvalida(int posX) {
-		return posX < 0 || posX >= obtenerTamano();
-	}
-
-	private boolean mismoColor(Color colA, Color colB) {
-		return colA.equals(colB);
-	}
-	
-	public ArrayList<Jugador> obtenerRanking() {
-		return this.ranking;
-	}
-	
-	
-	public void actualizarRanking(Jugador jugador) {
-
-	    // Buscar la posición correcta
-	    int posicion = 0;
-	    while (posicion < ranking.size() && jugador.obtenerPuntajeFinal() < ranking.get(posicion).obtenerPuntajeFinal()) {
-	        posicion++;
-	    }
-
-	    if (posicion <= 10) {
-	    	ranking.add(posicion, jugador);
-	    	ranking.remove(ranking.size() - 1); //Eliminar el último para conservar solo 10 siempre			
-		}
-	        
-	    
 	}
 
 }

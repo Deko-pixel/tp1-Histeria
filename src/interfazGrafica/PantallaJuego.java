@@ -81,6 +81,7 @@ public class PantallaJuego extends JFrame {
 		panelPista.add(etiquetaPista);
 
 		// Mostrar el siguiente color cuando se presione el botón "Pista"
+		//JButton btnPista = UtilidadesUI.crearBoton("Pista" 40, 329, 130, 30, )
 		JButton btnPista = new JButton("Pista");
 		btnPista.setFont(UtilidadesUI.cargarFuentePersonalizada(20f));
 		UtilidadesUI.aplicarDegradado(btnPista, Color.YELLOW, Color.RED, Color.YELLOW);
@@ -94,6 +95,8 @@ public class PantallaJuego extends JFrame {
 		});
 		btnPista.setBounds(40, 329, 130, 30);
 		getContentPane().add(btnPista);
+		
+		
 
 		// Panel superior para el cronómetro
 		JPanel panelSuperior = new JPanel();
