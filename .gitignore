@@ -1,0 +1,36 @@
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de IDEs
+.idea/
+.vscode/
+*.iml
+
+# Archivos de compilación
+/bin/
+/build/
+/out/
+*.class
+
+# Dependencias
+/lib/
+*.jar
+
+# Archivos temporales
+*.log
+*.tmp
+*.swp
+*~
+
+# Archivos de sistema operativo
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Archivos de empaquetado
+*.war
+*.ear
+
+# Archivos de pruebas
+/test-output/
