@@ -81,6 +81,7 @@ public class Juego {
 	
 	public void calcularPuntaje() {
 		jugador.calcularPuntaje(turnos, cantPistasUsadas, tiempoTotal, tiempoRestante);
+		System.out.println(cantPistasUsadas);
 	}
 	
 	public int obtenerPuntajeJugador() {
@@ -95,9 +96,7 @@ public class Juego {
 		return this.ranking;
 	}
 	
-	
 	public void actualizarRanking() {
-
 	    // Buscar la posición correcta
 	    int posicion = 0;
 	    while (posicion < ranking.size() && this.jugador.obtenerPuntajeFinal() < ranking.get(posicion).obtenerPuntajeFinal()) {

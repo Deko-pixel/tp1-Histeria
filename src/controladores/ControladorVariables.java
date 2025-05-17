@@ -35,4 +35,5 @@ public class ControladorVariables {
 	public ArrayList<Jugador> obtenerRanking() {
 		return juego.obtenerRanking();
 	}
+	
 }

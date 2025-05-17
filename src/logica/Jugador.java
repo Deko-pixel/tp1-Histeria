@@ -1,11 +1,9 @@
 package logica;
 
 public class Jugador {
-
 	private String nombre;
 	private int puntajeInicial;
 	private int puntajeFinal;
-
 	
 	public Jugador(String nombre) {
         this.nombre = nombre;
