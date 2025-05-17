@@ -18,9 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controladores.ControladorGrilla;
+import controladores.ControladorVariables;
 import logica.Dificultad;
-import logica.Juego;
-import logica.Jugador;
 import personalizacion.UtilidadesUI;
 
 import java.awt.FlowLayout;
@@ -31,21 +31,17 @@ import javax.swing.SwingConstants;
 public class PantallaJuego extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private Color siguienteColor; // Nuevo color para la pista
 	private JButton[][] matrizBotones;
-	private int tamanioGrilla;
-	private Juego juego;
-	private Jugador jugador;
-	private JLabel lblTiempo;
+	ControladorVariables controlesV;
+	ControladorGrilla controlesG;
 	private Timer timer;
 
 	public PantallaJuego(Dificultad dificultad, String nombre) {
 
-		this.juego = new Juego(dificultad);
-		this.jugador = new Jugador(nombre);
-		this.tamanioGrilla = juego.obtenerTamano(); // Usa el tamaño del juego
-		this.matrizBotones = new JButton[tamanioGrilla][tamanioGrilla];
-		this.siguienteColor = juego.obtenerSiguienteColor(); // Establecer el siguiente color
+		controlesG = new ControladorGrilla(dificultad, nombre);
+		controlesV = new ControladorVariables(controlesG.obtenerJuego()); //Asi no creamos dos objetos Juego.
+//		this.tamanioGrilla = juego.obtenerTamano(); *USAR LO DE ENUM*;
+		this.matrizBotones = new JButton[controlesG.obtenerTamanoGrilla()][controlesG.obtenerTamanoGrilla()];
 
     	setTitle("Histeria - Dificultad: "+dificultad+" - Dávalos, Galván, Götz del Federico, Valdiviezo");    	
 		setBounds(400, 100, 800, 600);
@@ -54,9 +50,9 @@ public class PantallaJuego extends JFrame {
 		getContentPane().setLayout(null);
 
 		JPanel panelDeBotones = new JPanel();
-		panelDeBotones.setBounds(220, 30, tamanioGrilla * 70, tamanioGrilla * 70);// tamanioGrilla *70
+		panelDeBotones.setBounds(220, 30, controlesG.obtenerTamanoGrilla() * 70, controlesG.obtenerTamanoGrilla() * 70);// tamanioGrilla *70
 		panelDeBotones.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelDeBotones.setLayout(new GridLayout(tamanioGrilla, tamanioGrilla, 3, 3));// tamanioGrilla
+		panelDeBotones.setLayout(new GridLayout(controlesG.obtenerTamanoGrilla(), controlesG.obtenerTamanoGrilla(), 3, 3));// tamanioGrilla
 		panelDeBotones.setBackground(Color.BLACK);
 		getContentPane().add(panelDeBotones);
 
@@ -71,15 +67,15 @@ public class PantallaJuego extends JFrame {
 		FlowLayout flowLayout = (FlowLayout) panelColorPista.getLayout();
 		panelColorPista.setBounds(35, 35, 60, 60);
 		panelPista.add(panelColorPista);
-		panelColorPista.setBackground(siguienteColor);
 
-		JLabel etiquetaPista = new JLabel("Próximo color:");
-		etiquetaPista.setForeground(new Color(255, 255, 255));
-		etiquetaPista.setHorizontalAlignment(SwingConstants.CENTER);
-		etiquetaPista.setBounds(0, 10, 130, 20);
-		etiquetaPista.setFont(UtilidadesUI.cargarFuentePersonalizada(9f));
-		UtilidadesUI.aplicarDegradado(etiquetaPista, Color.YELLOW, Color.RED, Color.YELLOW);
-		panelPista.add(etiquetaPista);
+
+//		JLabel etiquetaPista = new JLabel("Próximo color:");
+//		etiquetaPista.setForeground(new Color(255, 255, 255));
+//		etiquetaPista.setHorizontalAlignment(SwingConstants.CENTER);
+//		etiquetaPista.setBounds(0, 10, 130, 20);
+//		etiquetaPista.setFont(UtilidadesUI.cargarFuentePersonalizada(9f));
+//		UtilidadesUI.aplicarDegradado(etiquetaPista, Color.YELLOW, Color.RED, Color.YELLOW);
+//		panelPista.add(etiquetaPista);
 
 		// Mostrar el siguiente color cuando se presione el botón "Pista"
 		//JButton btnPista = UtilidadesUI.crearBoton("Pista" 40, 329, 130, 30, )
@@ -91,7 +87,7 @@ public class PantallaJuego extends JFrame {
 		UtilidadesUI.personalizarBoton(btnPista);
 		btnPista.addActionListener(e -> {
 
-			int[][] posicionPista = juego.obtenerPista();
+			int[][] posicionPista = controlesG.obtenerPista();
 			if (posicionPista != null) {
 			    int fila = posicionPista[0][0];
 			    int col = posicionPista[0][1];
@@ -105,8 +101,8 @@ public class PantallaJuego extends JFrame {
 		    }
 			    
 	    	
-			panelColorPista.setBackground(siguienteColor); // Actualizar el color de la pista
-			panelPista.setVisible(true); // Mostrar el panel con la pista
+//			panelColorPista.setBackground(juego.obtenerColorAleatorio());
+//			panelPista.setVisible(true);
 		});
 		btnPista.setBounds(40, 329, 130, 30);
 		getContentPane().add(btnPista);
@@ -147,15 +143,15 @@ public class PantallaJuego extends JFrame {
 		timer = new Timer(1000, new ActionListener() { // Timer tick por segundo
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				jugador.actualizarTiempo();
-				lblTiempo.setText(String.valueOf(formatoTiempo(jugador.obtenerTiempoRestante())));
-				if (jugador.obtenerTiempoRestante() == 0) {
+				controlesV.actualizarTiempo();
+				lblTiempo.setText(String.valueOf(formatoTiempo(controlesV.obtenerTiempoRestante())));
+				if (controlesV.obtenerTiempoRestante() == 0) {
 					timer.stop();
 					JOptionPane.showMessageDialog(null, "¡Tiempo agotado! Has perdido.", "Fin del Juego",
 							JOptionPane.WARNING_MESSAGE);
 					dispose();
-					PantallaFin pantallaFin = new PantallaFin(nombre, jugador.obtenerPuntajeFinal(),
-							juego.obtenerRanking(),"Perdiste");
+					PantallaFin pantallaFin = new PantallaFin(nombre, controlesV.obtenerPuntajeFinal(),
+							controlesV.obtenerRanking(),"Perdiste");
 					pantallaFin.setVisible(true);
 				}
 			}
@@ -165,39 +161,28 @@ public class PantallaJuego extends JFrame {
 		timer.start();
 
 		// Llenar matriz de botones
-		for (int f = 0; f < tamanioGrilla; f++) {
-			for (int c = 0; c < tamanioGrilla; c++) {
+		for (int f = 0; f < matrizBotones.length; f++) {
+			for (int c = 0; c < matrizBotones.length; c++) {
 				JButton boton = new JButton();
 				boton.setBackground(Color.GRAY);
-				juego.establecerColorEnGrilla(f, c, Color.GRAY);
 
 				int fila = f;
 				int columna = c;
 				boton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						jugador.actualizarTurnos();
-						lblTurnos.setText("Turnos: " + jugador.obtenerTurnos());
-						juego.establecerColorEnGrilla(fila, columna, siguienteColor);
-
-						// Verificar coincidencias
-						juego.verificarVecinos(fila, columna);
-						actualizarInterfaz();
-
-						// Actualizar el siguiente color
-						siguienteColor = juego.obtenerSiguienteColor(); // Establecer el siguiente color
-						panelColorPista.setBackground(siguienteColor); // Actualizar el panel de pista
-						panelPista.setVisible(false); // Ocultar la pista después de hacer un clic
+						controlesV.actualizarTurnos();
+						lblTurnos.setText("Turnos: " + controlesV.obtenerTurnos());
+						controlesG.actualizarEstadoJuego(fila, columna);
 
 						// Verificar si esta completa la grilla
-						if (juego.grillaEstaCompleta()) {
+						if (controlesG.terminoElJuego()) {
 							timer.stop();
 							dispose();
-							jugador.calcularPuntaje();
-							juego.actualizarRanking(jugador);
-							PantallaFin pantallaFin = new PantallaFin(nombre, jugador.obtenerPuntajeFinal(),
-									juego.obtenerRanking(), "Ganaste");
+							PantallaFin pantallaFin = new PantallaFin(nombre, controlesV.obtenerPuntajeFinal(),
+									controlesV.obtenerRanking(), "Ganaste");
 							pantallaFin.setVisible(true);
 						}
+						actualizarInterfaz();
 					}
 				});
 				matrizBotones[f][c] = boton;
@@ -209,9 +194,10 @@ public class PantallaJuego extends JFrame {
 	}
 
 	private void actualizarInterfaz() {
-		for (int fila = 0; fila < tamanioGrilla; fila++) {
-			for (int columna = 0; columna < tamanioGrilla; columna++) {
-				matrizBotones[fila][columna].setBackground(juego.obtenerColor(fila, columna));
+		for (int fila = 0; fila < matrizBotones.length; fila++) {
+			for (int columna = 0; columna < matrizBotones.length; columna++) {
+				matrizBotones[fila][columna].setBackground(controlesG.obtenerColorEnPosicion(fila, columna));
+				matrizBotones[fila][columna].setBorder(null); //
 			}
 		}
 	}
