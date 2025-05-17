@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -82,14 +83,28 @@ public class PantallaJuego extends JFrame {
 
 		// Mostrar el siguiente color cuando se presione el botón "Pista"
 		//JButton btnPista = UtilidadesUI.crearBoton("Pista" 40, 329, 130, 30, )
+		//ESTO HAY QUE EDITARLO
+		//FUNCIONA PERO SOLO ERA PARA PROBARLO, ROMPE EL SEPARATED PRESENTATION
 		JButton btnPista = new JButton("Pista");
 		btnPista.setFont(UtilidadesUI.cargarFuentePersonalizada(20f));
 		UtilidadesUI.aplicarDegradado(btnPista, Color.YELLOW, Color.RED, Color.YELLOW);
 		UtilidadesUI.personalizarBoton(btnPista);
 		btnPista.addActionListener(e -> {
-			if (!panelPista.isVisible()) {
-				jugador.contarPistasUsadas();
-			}
+
+			int[][] posicionPista = juego.obtenerPista();
+			if (posicionPista != null) {
+			    int fila = posicionPista[0][0];
+			    int col = posicionPista[0][1];
+			    
+			    for (int f = 0; f < matrizBotones.length; f++) {
+		            for (int c = 0; c < matrizBotones[0].length; c++) {
+		            	matrizBotones[f][c].setBorder(null); //
+		            }
+		        }
+			    matrizBotones[fila][col].setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
+		    }
+			    
+	    	
 			panelColorPista.setBackground(siguienteColor); // Actualizar el color de la pista
 			panelPista.setVisible(true); // Mostrar el panel con la pista
 		});

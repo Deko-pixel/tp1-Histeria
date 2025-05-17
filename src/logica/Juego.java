@@ -98,6 +98,53 @@ public class Juego {
 	    
 	}
 	
+	public int[][] obtenerPista() {
+	    int mejorFila = -1;
+	    int mejorCol = -1;
+	    int menorCantidadColoresVecinos = 6;
+
+	    for (int fila = 0; fila < obtenerTamano(); fila++) {
+	        for (int col = 0; col < obtenerTamano(); col++) {
+	            if (obtenerColor(fila, col) == Color.GRAY) {
+	                ArrayList<Color> coloresVecinos = obtenerColoresVecinos(fila, col);
+
+	                if (coloresVecinos.isEmpty()) {
+	                    return new int[][] { { fila, col } };
+	                }
+
+	                if (coloresVecinos.size() < menorCantidadColoresVecinos) {
+	                    menorCantidadColoresVecinos = coloresVecinos.size();
+	                    mejorFila = fila;
+	                    mejorCol = col;
+	                }
+	            }
+	        }
+	    }
+
+	    if (mejorFila != -1 && mejorCol != -1) {
+	        return new int[][] { { mejorFila, mejorCol } };
+	    }
+
+	    return null;
+	}
+	
+	private ArrayList<Color> obtenerColoresVecinos(int fila, int col) {
+	    ArrayList<Color> colores = new ArrayList<>();
+	    int[][] direcciones = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+
+	    for (int[] dir : direcciones) {
+	        int f = fila + dir[0];
+	        int c = col + dir[1];
+	        if (!posicionInvalida(f) && !posicionInvalida(c)) {
+	            Color vecino = obtenerColor(f, c);
+	            if (vecino != null && vecino != Color.GRAY && !colores.contains(vecino)) {
+	                colores.add(vecino);
+	            }
+	        }
+	    }
+	    return colores;
+	}
+	
 	private boolean posicionInvalida(int posX) {
 		return posX < 0 || posX >= obtenerTamano();
 	}
