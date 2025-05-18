@@ -39,34 +39,32 @@ public class GerenteGrilla {
 		}
 	}
 	
-	protected int[][] obtenerPista() {
-	    int mejorFila = -1;
-	    int mejorCol = -1;
-	    int menorCantidadColoresVecinos = 6;
+	protected int[][] obtenerPista(Color aColorear) {
+	    int filaGris = -1;
+	    int colGris = -1;
 
 	    for (int fila = 0; fila < obtenerTamano(); fila++) {
 	        for (int col = 0; col < obtenerTamano(); col++) {
 	            if (obtenerColor(fila, col) == Color.GRAY) {
+	            	filaGris = fila;
+	            	colGris = col;
 	                ArrayList<Color> coloresVecinos = obtenerColoresVecinos(fila, col);
 
 	                if (coloresVecinos.isEmpty()) {
 	                    return new int[][] { { fila, col } };
 	                }
-
-	                if (coloresVecinos.size() < menorCantidadColoresVecinos) {
-	                    menorCantidadColoresVecinos = coloresVecinos.size();
-	                    mejorFila = fila;
-	                    mejorCol = col;
+	                boolean hayVecinosMismoColor = false;
+	                for (Color c : coloresVecinos) {
+	                	if (mismoColor(c, aColorear))
+	                		hayVecinosMismoColor = true;
+	                }
+	                if (!hayVecinosMismoColor) {
+	                	return new int[][] { { fila, col } };
 	                }
 	            }
 	        }
 	    }
-
-	    if (mejorFila != -1 && mejorCol != -1) {
-	        return new int[][] { { mejorFila, mejorCol } };
-	    }
-
-	    return null;
+	    return new int[][] { { filaGris, colGris } };
 	}
 
 	protected boolean grillaEstaCompleta() {

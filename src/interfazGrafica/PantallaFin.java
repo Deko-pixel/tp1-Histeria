@@ -39,9 +39,11 @@ public class PantallaFin extends JFrame {
     }
 
     private void crearBotones() {
-        JButton btnSalir = UtilidadesUI.crearBoton("Salir", 210, 470, 100, 40, e -> dispose());
+        JButton btnSalir = UtilidadesUI.crearBoton("Salir", 210, 470, 100, 40);
+        btnSalir.addActionListener(e -> dispose());
         getContentPane().add(btnSalir);
-        JButton btnMenu = UtilidadesUI.crearBoton("Menu Principal", 355, 470, 220, 40, e -> {
+        JButton btnMenu = UtilidadesUI.crearBoton("Menu Principal", 355, 470, 220, 40);
+        btnMenu.addActionListener(e -> {
             dispose();
             new PantallaInicio(true).setVisible(true);
         });

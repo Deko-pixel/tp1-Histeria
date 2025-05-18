@@ -178,11 +178,10 @@ public class UtilidadesUI {
         return label;
     }
 
-    public static JButton crearBoton(String texto, int x, int y, int ancho, int alto, ActionListener accion) {
+    public static JButton crearBoton(String texto, int x, int y, int ancho, int alto) {
         JButton boton = new JButton(texto);
         boton.setBounds(x, y, ancho, alto);
         boton.setFont(cargarFuentePersonalizada(15f));
-        boton.addActionListener(accion);
         aplicarDegradado(boton, Color.YELLOW, Color.RED, Color.YELLOW);
         personalizarBoton(boton);
         return boton;

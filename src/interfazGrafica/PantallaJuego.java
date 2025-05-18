@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import controladores.ControladorGrilla;
 import controladores.ControladorJuego;
+import controladores.ControladorVariables;
 import logica.Dificultad;
 import logica.Jugador;
 import logica.ObservadorJuego;
@@ -21,6 +23,8 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 
     private static final long serialVersionUID = 1L;
     private JButton[][] matrizBotones;
+    private ControladorVariables controlesV;
+    private ControladorGrilla controlesG;
     private ControladorJuego controlesJ;
     private Timer timer;
     private JLabel lblTiempo;
@@ -28,7 +32,9 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 
     public PantallaJuego(Dificultad dificultad, String nombre) {
         controlesJ = new ControladorJuego(dificultad, nombre);
-        controlesJ.getJuego().agregarObservador(this); 
+        controlesJ.agregarObservador(this);
+        controlesG = new ControladorGrilla(controlesJ.getJuego());
+        controlesV = new ControladorVariables(controlesJ.getJuego());
 
         configurarVentana(dificultad);
         JPanel panelDeBotones = configurarGrilla();
@@ -56,9 +62,8 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
         for (int fila = 0; fila < matrizBotones.length; fila++) {
             for (int col = 0; col < matrizBotones.length; col++) {
                 matrizBotones[fila][col].setBackground(
-                    controlesJ.getControladorGrilla().obtenerColorEnPosicion(fila, col)
+                    controlesG.obtenerColorEnPosicion(fila, col)
                 );
-                matrizBotones[fila][col].setBorder(null);
             }
         }
     }
@@ -74,12 +79,12 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 
 	public void mostrarFinDelJuego(String mensaje, int puntajeFinal, ArrayList<Jugador> ranking) {
 		dispose();
-	    new PantallaFin("Jugador", puntajeFinal, ranking, mensaje).setVisible(true);
+	    new PantallaFin(controlesV.obtenerNombreJugador(), puntajeFinal, ranking, mensaje).setVisible(true);
 	}
 	
 	@Override
 	public void notificarCambio() {
-		actualizarTurnos(controlesJ.getControladorVariables().obtenerTurnos());
+		actualizarTurnos(controlesV.obtenerTurnos());
 	    actualizarGrilla();
 	}
 
@@ -87,8 +92,8 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 	public void notificarFinDelJuego() {
 		detenerTimer();
 	    mostrarFinDelJuego("Ganaste", 
-	    controlesJ.getControladorVariables().obtenerPuntajeFinal(), 
-	    controlesJ.getControladorVariables().obtenerRanking());
+	    controlesV.obtenerPuntajeFinal(), 
+	    controlesV.obtenerRanking());
 	}
 
     private void configurarVentana(Dificultad dificultad) {
@@ -100,7 +105,7 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
     }
 
     private JPanel configurarGrilla() {
-        int tamano = controlesJ.getControladorGrilla().obtenerTamanoGrilla();
+        int tamano = controlesG.obtenerTamanoGrilla();
         matrizBotones = new JButton[tamano][tamano];
         JPanel panelDeBotones = new JPanel();
         panelDeBotones.setBounds(220, 30, tamano * 70, tamano * 70);
@@ -143,8 +148,10 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
     }
 
     private void agregarBotonPista() {
-        JButton btnPista = UtilidadesUI.crearBoton("Pista", 40, 329, 130, 30, 
-        	e ->{ int[][] pista=controlesJ.getControladorGrilla().obtenerPista();
+        JButton btnPista = UtilidadesUI.crearBoton("Pista", 40, 329, 130, 30);
+        btnPista.addActionListener(e -> 
+        { 
+        	int[][] pista=controlesG.obtenerPista();
         		if (pista!=null) 
         			marcarPosicionPista(pista[0][0],pista[0][1]);
         	});
@@ -153,9 +160,9 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 
     private void iniciarTimer(String nombre) {
         timer = new Timer(1000, e -> {
-            controlesJ.getControladorVariables().actualizarTiempo();
-            lblTiempo.setText(formatoTiempo(controlesJ.getControladorVariables().obtenerTiempoRestante()));
-            if (controlesJ.getControladorVariables().obtenerTiempoRestante() == 0) {
+            controlesV.actualizarTiempo();
+            lblTiempo.setText(formatoTiempo(controlesV.obtenerTiempoRestante()));
+            if (controlesV.obtenerTiempoRestante() == 0) {
                 timer.stop();
                 JOptionPane.showMessageDialog(null,
                     "¡Tiempo agotado! Has perdido.",
@@ -163,8 +170,8 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
                 dispose();
                 new PantallaFin(
                     nombre,
-                    controlesJ.getControladorVariables().obtenerPuntajeFinal(),
-                    controlesJ.getControladorVariables().obtenerRanking(),
+                    controlesV.obtenerPuntajeFinal(),
+                    controlesV.obtenerRanking(),
                     "Perdiste"
                 ).setVisible(true);
             }
@@ -178,10 +185,20 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
                 JButton boton = new JButton();
                 boton.setBackground(Color.GRAY);
                 boton.addActionListener(e -> {
-                	controlesJ.clicEnCasilla(fila,columna);
+                	controlesV.actualizarTurnos();
+                	controlesG.actualizarEstadoJuego(fila, columna);
+                	actualizarBordes();
                 });
                 matrizBotones[f][c] = boton;
                 panelDeBotones.add(boton);
+            }
+        }
+    }
+    
+    public void actualizarBordes() {
+        for (int f = 0; f < matrizBotones.length; f++) {
+            for (int c = 0; c < matrizBotones[0].length; c++) {
+                matrizBotones[f][c].setBorder(null);
             }
         }
     }

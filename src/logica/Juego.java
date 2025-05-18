@@ -13,6 +13,7 @@ public class Juego {
 	private int tiempoTotal;
 	private boolean juegoTerminado;
 	private ArrayList<ObservadorJuego> observadores = new ArrayList<>();
+	private Color siguienteColor;
 
 	public Juego(Dificultad dificultad, String nombre) {
 		switch (dificultad) {
@@ -25,6 +26,7 @@ public class Juego {
 		this.jugador= new Jugador(nombre);
 		this.tiempoRestante = 300;
 		this.juegoTerminado = false;
+		this.siguienteColor = obtenerColorAleatorio();
 		//Ranking por defecto
 		String nombres[] = {"Alan", "Débora", "Juan", "Leo", "Bob", "Cosme", "Alan","Débora", "Juan", "Leo" };
 		int puntajes[] = {740, 733, 712, 666, 631, 574, 541, 500, 432, 321};
@@ -57,7 +59,7 @@ public class Juego {
 	
 	public int[][] obtenerPista() {
 		this.cantPistasUsadas++;
-		return gerente.obtenerPista();
+		return gerente.obtenerPista(siguienteColor);
 	}
 	
 	public int obtenerTurnos() {
@@ -87,7 +89,7 @@ public class Juego {
 	}
 	
 	public void actualizarEstadoJuego(int fila, int columna) {
-		gerente.actualizarGrilla(fila, columna, obtenerColorAleatorio());
+		gerente.actualizarGrilla(fila, columna, siguienteColor);
 		if(gerente.grillaEstaCompleta()) {
 			juegoTerminado = true;
 			calcularPuntaje();
@@ -95,6 +97,7 @@ public class Juego {
 			notificarFinDelJuego();
 		}
 		notificarObservadores();
+		siguienteColor = obtenerColorAleatorio();
 	}
 
 	

@@ -52,8 +52,10 @@ public class PantallaInicio extends JFrame {
         gifLabel.setBounds(100, 95, 300, 300);
         panelInicio.add(gifLabel);
 
-        JButton btnSi = UtilidadesUI.crearBoton("Si", 125, 450, 60, 40, e -> mostrarPanel(true));
-        JButton btnNo = UtilidadesUI.crearBoton("No", 325, 450, 60, 40, e -> dispose());
+        JButton btnSi = UtilidadesUI.crearBoton("Si", 125, 450, 60, 40);
+        btnSi.addActionListener(e -> mostrarPanel(true));
+        JButton btnNo = UtilidadesUI.crearBoton("No", 325, 450, 60, 40);
+        btnNo.addActionListener(e -> dispose());
 
         panelInicio.add(lblBienvenido);
         panelInicio.add(lblTitulo);
@@ -84,9 +86,12 @@ public class PantallaInicio extends JFrame {
         comboBoxDificultad.setBounds(300, 170, 160, 40);
         panelDatos.add(comboBoxDificultad);
 
-        JButton btnComenzar = UtilidadesUI.crearBoton("Comenzar", 300, 350, 160, 40, this::accionComenzar);
-        JButton btnComoJugar = UtilidadesUI.crearBoton("Cómo jugar", 20, 350, 170, 40, this::accionComoJugar);
-        JButton btnSalir = UtilidadesUI.crearBoton("Salir", 200, 420, 90, 40, e -> dispose());
+        JButton btnComenzar = UtilidadesUI.crearBoton("Comenzar", 300, 350, 160, 40);
+        btnComenzar.addActionListener(e -> { accionComenzar(e); });
+        JButton btnComoJugar = UtilidadesUI.crearBoton("Cómo jugar", 20, 350, 170, 40);
+        btnComoJugar.addActionListener(e -> {accionComoJugar(e); });
+        JButton btnSalir = UtilidadesUI.crearBoton("Salir", 200, 420, 90, 40);
+        btnSalir.addActionListener(e -> dispose());
 
         panelDatos.add(textFieldNombre);
         panelDatos.add(lblNombre);

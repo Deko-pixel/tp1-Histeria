@@ -28,6 +28,10 @@ public class ControladorVariables {
 		juego.actualizarTurnos();
 	}
 	
+	public String obtenerNombreJugador() {
+		return juego.obtenerNombreJugador();
+	}
+	
 	public int obtenerPuntajeFinal() {
 		return juego.obtenerPuntajeJugador();
 	}
