@@ -1,6 +1,5 @@
 package controladores;
 
-import interfazGrafica.PantallaJuego;
 import logica.Dificultad;
 import logica.Juego;
 
@@ -22,18 +21,14 @@ public class ControladorJuego {
     public ControladorVariables getControladorVariables() {
         return controladorVariables;
     }
+    
+    public Juego getJuego() {
+        return juego;
+    }
 
-	public void clicEnCasilla(int fila, int columna, PantallaJuego vista) {
+	public void clicEnCasilla(int fila, int columna) {
 		controladorVariables.actualizarTurnos();
-	    vista.actualizarTurnos(controladorVariables.obtenerTurnos());
 	    controladorGrilla.actualizarEstadoJuego(fila, columna);
-
-	    if (controladorGrilla.terminoElJuego()) {
-	        vista.detenerTimer();
-	        vista.mostrarFinDelJuego("Ganaste", controladorVariables.obtenerPuntajeFinal(), controladorVariables.obtenerRanking());
-	    } else {
-	        vista.actualizarGrilla();
-	    }
 	}
 
 }

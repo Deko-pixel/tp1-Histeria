@@ -1,7 +1,6 @@
 package controladores;
 
 import java.awt.Color;
-import interfazGrafica.PantallaJuego;
 import logica.Juego;
 
 public class ControladorGrilla {
@@ -25,11 +24,8 @@ public class ControladorGrilla {
 		
 	}
 
-	public void marcarPistaEnVista(PantallaJuego vista) {
-		int [][]posicion= juego.obtenerPista();
-		if(posicion!=null) {
-			vista.marcarPosicionPista(posicion[0][0],posicion[0][1]);
-		}	
+	public int[][] obtenerPista() {
+		return juego.obtenerPista();
 	}
 
 	public boolean terminoElJuego() {

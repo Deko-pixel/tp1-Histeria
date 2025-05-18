@@ -12,6 +12,7 @@ public class Juego {
 	private int tiempoRestante; // Tiempo en segundos
 	private int tiempoTotal;
 	private boolean juegoTerminado;
+	private ArrayList<ObservadorJuego> observadores = new ArrayList<>();
 
 	public Juego(Dificultad dificultad, String nombre) {
 		switch (dificultad) {
@@ -30,6 +31,20 @@ public class Juego {
 		for (int i = 0; i < 10; i++) {
 			ranking.add(i, new Jugador(nombres[i], puntajes[i]));
 		}
+	}
+	
+	public void agregarObservador(ObservadorJuego obs) {
+	    observadores.add(obs);
+	}
+
+	public void eliminarObservador(ObservadorJuego obs) {
+	    observadores.remove(obs);
+	}
+
+	private void notificarObservadores() {
+	    for (ObservadorJuego o : observadores) {
+	        o.notificarCambio();
+	    }
 	}
 	
 	public int obtenerTamanoGrilla() {
@@ -51,6 +66,7 @@ public class Juego {
 	
 	public void actualizarTurnos() {
 		this.turnos++;
+		notificarObservadores();
 	}
 	
 	public int obtenerTiempoRestante() {
@@ -59,6 +75,7 @@ public class Juego {
 	
 	public void actualizarTiempo() {
 		this.tiempoRestante--;
+		notificarObservadores();
 	}
 	
 	public int obtenerTiempoTotal() {
@@ -75,10 +92,18 @@ public class Juego {
 			juegoTerminado = true;
 			calcularPuntaje();
 			actualizarRanking();
+			notificarFinDelJuego();
 		}
+		notificarObservadores();
 	}
 
 	
+	private void notificarFinDelJuego() {
+		for(ObservadorJuego o: observadores) {
+			o.notificarFinDelJuego();
+		}
+	}
+
 	public void calcularPuntaje() {
 		jugador.calcularPuntaje(turnos, cantPistasUsadas, tiempoTotal, tiempoRestante);
 		System.out.println(cantPistasUsadas);

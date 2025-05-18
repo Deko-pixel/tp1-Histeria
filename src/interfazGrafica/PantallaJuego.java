@@ -14,9 +14,10 @@ import javax.swing.Timer;
 import controladores.ControladorJuego;
 import logica.Dificultad;
 import logica.Jugador;
+import logica.ObservadorJuego;
 import personalizacion.UtilidadesUI;
 
-public class PantallaJuego extends JFrame {
+public class PantallaJuego extends JFrame implements ObservadorJuego {
 
     private static final long serialVersionUID = 1L;
     private JButton[][] matrizBotones;
@@ -27,6 +28,7 @@ public class PantallaJuego extends JFrame {
 
     public PantallaJuego(Dificultad dificultad, String nombre) {
         controlesJ = new ControladorJuego(dificultad, nombre);
+        controlesJ.getJuego().agregarObservador(this); 
 
         configurarVentana(dificultad);
         JPanel panelDeBotones = configurarGrilla();
@@ -73,6 +75,20 @@ public class PantallaJuego extends JFrame {
 	public void mostrarFinDelJuego(String mensaje, int puntajeFinal, ArrayList<Jugador> ranking) {
 		dispose();
 	    new PantallaFin("Jugador", puntajeFinal, ranking, mensaje).setVisible(true);
+	}
+	
+	@Override
+	public void notificarCambio() {
+		actualizarTurnos(controlesJ.getControladorVariables().obtenerTurnos());
+	    actualizarGrilla();
+	}
+
+	@Override
+	public void notificarFinDelJuego() {
+		detenerTimer();
+	    mostrarFinDelJuego("Ganaste", 
+	    controlesJ.getControladorVariables().obtenerPuntajeFinal(), 
+	    controlesJ.getControladorVariables().obtenerRanking());
 	}
 
     private void configurarVentana(Dificultad dificultad) {
@@ -127,8 +143,11 @@ public class PantallaJuego extends JFrame {
     }
 
     private void agregarBotonPista() {
-        JButton btnPista = UtilidadesUI.crearBoton("Pista", 40, 329, 130, 30,e ->
-        controlesJ.getControladorGrilla().marcarPistaEnVista(this));
+        JButton btnPista = UtilidadesUI.crearBoton("Pista", 40, 329, 130, 30, 
+        	e ->{ int[][] pista=controlesJ.getControladorGrilla().obtenerPista();
+        		if (pista!=null) 
+        			marcarPosicionPista(pista[0][0],pista[0][1]);
+        	});
         getContentPane().add(btnPista);
     }
 
@@ -159,7 +178,7 @@ public class PantallaJuego extends JFrame {
                 JButton boton = new JButton();
                 boton.setBackground(Color.GRAY);
                 boton.addActionListener(e -> {
-                	controlesJ.clicEnCasilla(fila,columna,this);
+                	controlesJ.clicEnCasilla(fila,columna);
                 });
                 matrizBotones[f][c] = boton;
                 panelDeBotones.add(boton);
