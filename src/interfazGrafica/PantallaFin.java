@@ -42,7 +42,7 @@ public class PantallaFin extends JFrame {
         JButton btnSalir = UtilidadesUI.crearBoton("Salir", 210, 470, 100, 40);
         btnSalir.addActionListener(e -> dispose());
         getContentPane().add(btnSalir);
-        JButton btnMenu = UtilidadesUI.crearBoton("Menu Principal", 355, 470, 220, 40);
+        JButton btnMenu = UtilidadesUI.crearBoton("Menu Principal", 355, 470, 230, 40);
         btnMenu.addActionListener(e -> {
             dispose();
             new PantallaInicio(true).setVisible(true);
