@@ -20,8 +20,7 @@ public class ControladorGrilla {
 	}
 
 	public void actualizarEstadoJuego(int fila, int columna) {
-		juego.actualizarEstadoJuego(fila, columna);
-		
+		juego.actualizarEstadoJuego(fila, columna);	
 	}
 
 	public int[][] obtenerPista() {

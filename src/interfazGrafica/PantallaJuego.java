@@ -82,6 +82,14 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 	    new PantallaFin(controlesV.obtenerNombreJugador(), puntajeFinal, ranking, mensaje).setVisible(true);
 	}
 	
+    public void actualizarBordes() {
+        for (int f = 0; f < matrizBotones.length; f++) {
+            for (int c = 0; c < matrizBotones[0].length; c++) {
+                matrizBotones[f][c].setBorder(null);
+            }
+        }
+    }
+	
 	@Override
 	public void notificarCambio() {
 		actualizarTurnos(controlesV.obtenerTurnos());
@@ -191,14 +199,6 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
                 });
                 matrizBotones[f][c] = boton;
                 panelDeBotones.add(boton);
-            }
-        }
-    }
-    
-    public void actualizarBordes() {
-        for (int f = 0; f < matrizBotones.length; f++) {
-            for (int c = 0; c < matrizBotones[0].length; c++) {
-                matrizBotones[f][c].setBorder(null);
             }
         }
     }

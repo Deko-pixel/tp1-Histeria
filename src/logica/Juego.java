@@ -38,16 +38,6 @@ public class Juego {
 	public void agregarObservador(ObservadorJuego obs) {
 	    observadores.add(obs);
 	}
-
-	public void eliminarObservador(ObservadorJuego obs) {
-	    observadores.remove(obs);
-	}
-
-	private void notificarObservadores() {
-	    for (ObservadorJuego o : observadores) {
-	        o.notificarCambio();
-	    }
-	}
 	
 	public int obtenerTamanoGrilla() {
 		return gerente.obtenerTamano();
@@ -100,13 +90,6 @@ public class Juego {
 		siguienteColor = obtenerColorAleatorio();
 	}
 
-	
-	private void notificarFinDelJuego() {
-		for(ObservadorJuego o: observadores) {
-			o.notificarFinDelJuego();
-		}
-	}
-
 	public void calcularPuntaje() {
 		jugador.calcularPuntaje(turnos, cantPistasUsadas, tiempoTotal, tiempoRestante);
 		System.out.println(cantPistasUsadas);
@@ -141,6 +124,18 @@ public class Juego {
 		Color naranja = new Color(255, 128, 0);
 		Color[] colores = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, naranja, Color.MAGENTA };
 		return colores[(int) (Math.random() * colores.length)];
+	}
+	
+	private void notificarFinDelJuego() {
+		for(ObservadorJuego o: observadores) {
+			o.notificarFinDelJuego();
+		}
+	}
+	
+	private void notificarObservadores() {
+	    for (ObservadorJuego o : observadores) {
+	        o.notificarCambio();
+	    }
 	}
 
 }

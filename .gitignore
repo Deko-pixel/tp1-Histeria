@@ -6,16 +6,19 @@
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
 
-# Archivos de configuración de IDEs
+# Configuración de IDEs
 .idea/
 .vscode/
 *.iml
 
 # Archivos de compilación
 /bin/
-/build/
-/out/
+build/
+out/
 *.class
 
 # Dependencias
@@ -27,11 +30,6 @@ Thumbs.db
 *.tmp
 *.swp
 *~
-
-# Archivos de sistema operativo
-ehthumbs.db
-Icon?
-Desktop.ini
 
 # Archivos de empaquetado
 *.war

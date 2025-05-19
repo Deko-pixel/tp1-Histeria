@@ -18,4 +18,5 @@ public class ControladorJuego {
     public void agregarObservador(ObservadorJuego o) {
     	juego.agregarObservador(o);
     }
+    
 }

@@ -28,11 +28,6 @@ public class UtilidadesUI {
         }
     }
 
-    private static LinearGradientPaint crearDegradado(int width, int height, Color c1, Color c2, Color c3) {
-        return new LinearGradientPaint(new Point(0, 0), new Point(width, height),
-                new float[]{0.0f, 0.5f, 1.0f}, new Color[]{c1, c2, c3});
-    }
-
     public static void aplicarDegradado(JLabel label, Color c1, Color c2, Color c3) {
         label.setOpaque(false);
         label.setUI(new BasicLabelUI() {
@@ -185,6 +180,11 @@ public class UtilidadesUI {
         aplicarDegradado(boton, Color.YELLOW, Color.RED, Color.YELLOW);
         personalizarBoton(boton);
         return boton;
+    }
+    
+    private static LinearGradientPaint crearDegradado(int width, int height, Color c1, Color c2, Color c3) {
+        return new LinearGradientPaint(new Point(0, 0), new Point(width, height),
+                new float[]{0.0f, 0.5f, 1.0f}, new Color[]{c1, c2, c3});
     }
 
 }
