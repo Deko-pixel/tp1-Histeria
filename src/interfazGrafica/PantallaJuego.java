@@ -69,6 +69,7 @@ public class PantallaJuego extends JFrame{
         JPanel panelSuperior = new JPanel();
         panelSuperior.setBounds(40, 30, 130, 120);
         panelSuperior.setBackground(Color.BLACK);
+        panelSuperior.setLayout(null);
 
         JLabel labelNombre = UtilidadesUI.crearEtiqueta(nombre, 10f, 0, 20, 130, 20, Color.YELLOW);
         lblTiempo = UtilidadesUI.crearEtiqueta("Tiempo: 0:00", 10f, 0, 50, 130, 20, Color.YELLOW);
