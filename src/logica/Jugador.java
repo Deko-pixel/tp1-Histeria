@@ -21,12 +21,11 @@ public class Jugador {
 	}
 	
 	public int obtenerPuntajeFinal() {
-		
-		return this.puntajeFinal;
+		return puntajeFinal;
 	}
 	
 	public String obtenerNombre() {
-		return this.nombre;
+		return nombre;
 	}
 		
 }

@@ -17,7 +17,6 @@ public class ControladorVariables {
 
 	public void actualizarTiempo() {
 		juego.actualizarTiempo();;
-		
 	}
 	
 	public int obtenerTurnos() {

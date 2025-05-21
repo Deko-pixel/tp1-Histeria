@@ -16,10 +16,9 @@ import controladores.ControladorJuego;
 import controladores.ControladorVariables;
 import logica.Dificultad;
 import logica.Jugador;
-import logica.ObservadorJuego;
 import personalizacion.UtilidadesUI;
 
-public class PantallaJuego extends JFrame implements ObservadorJuego {
+public class PantallaJuego extends JFrame{
 
     private static final long serialVersionUID = 1L;
     private JButton[][] matrizBotones;
@@ -32,13 +31,11 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
 
     public PantallaJuego(Dificultad dificultad, String nombre) {
         controlesJ = new ControladorJuego(dificultad, nombre);
-        controlesJ.agregarObservador(this);
         controlesG = new ControladorGrilla(controlesJ.getJuego());
         controlesV = new ControladorVariables(controlesJ.getJuego());
 
         configurarVentana(dificultad);
         JPanel panelDeBotones = configurarGrilla();
-        crearPanelPista();
         crearPanelSuperior(nombre);
         agregarBotonPista();
         iniciarTimer(nombre);
@@ -48,62 +45,6 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
         timer.start();
     }
     
-    public void marcarPosicionPista(int fila, int col) {
-        for (int f = 0; f < matrizBotones.length; f++) {
-            for (int c = 0; c < matrizBotones[0].length; c++) {
-                matrizBotones[f][c].setBorder(null);
-            }
-        }
-        matrizBotones[fila][col]
-            .setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
-    }
-    
-    public void actualizarGrilla() {
-        for (int fila = 0; fila < matrizBotones.length; fila++) {
-            for (int col = 0; col < matrizBotones.length; col++) {
-                matrizBotones[fila][col].setBackground(
-                    controlesG.obtenerColorEnPosicion(fila, col)
-                );
-            }
-        }
-    }
-
-	public void actualizarTurnos(int turnos) {
-		lblTurnos.setText("Turnos: " + turnos);
-	}
-
-	public void detenerTimer() {
-		if (timer != null)
-	        timer.stop();
-	}
-
-	public void mostrarFinDelJuego(String mensaje, int puntajeFinal, ArrayList<Jugador> ranking) {
-		dispose();
-	    new PantallaFin(controlesV.obtenerNombreJugador(), puntajeFinal, ranking, mensaje).setVisible(true);
-	}
-	
-    public void actualizarBordes() {
-        for (int f = 0; f < matrizBotones.length; f++) {
-            for (int c = 0; c < matrizBotones[0].length; c++) {
-                matrizBotones[f][c].setBorder(null);
-            }
-        }
-    }
-	
-	@Override
-	public void notificarCambio() {
-		actualizarTurnos(controlesV.obtenerTurnos());
-	    actualizarGrilla();
-	}
-
-	@Override
-	public void notificarFinDelJuego() {
-		detenerTimer();
-	    mostrarFinDelJuego("Ganaste", 
-	    controlesV.obtenerPuntajeFinal(), 
-	    controlesV.obtenerRanking());
-	}
-
     private void configurarVentana(Dificultad dificultad) {
         setTitle("Histeria - Dificultad: " + dificultad +" - Dávalos, Galván, Götz del Federico, Valdiviezo");
         setBounds(400, 100, 800, 600);
@@ -124,25 +65,10 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
         return panelDeBotones;
     }
 
-    private void crearPanelPista() {
-        JPanel panelPista = new JPanel();
-        panelPista.setBounds(40, 170, 130, 120);
-        panelPista.setBackground(Color.BLACK);
-        panelPista.setLayout(null);
-        panelPista.setVisible(false);
-
-        JPanel panelColorPista = new JPanel();
-        panelColorPista.setBounds(35, 35, 60, 60);
-        panelPista.add(panelColorPista);
-
-        getContentPane().add(panelPista);
-    }
-
     private void crearPanelSuperior(String nombre) {
         JPanel panelSuperior = new JPanel();
         panelSuperior.setBounds(40, 30, 130, 120);
         panelSuperior.setBackground(Color.BLACK);
-        panelSuperior.setLayout(null);
 
         JLabel labelNombre = UtilidadesUI.crearEtiqueta(nombre, 10f, 0, 20, 130, 20, Color.YELLOW);
         lblTiempo = UtilidadesUI.crearEtiqueta("Tiempo: 0:00", 10f, 0, 50, 130, 20, Color.YELLOW);
@@ -160,9 +86,12 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
         btnPista.addActionListener(e -> 
         { 
         	int[][] pista=controlesG.obtenerPista();
-        		if (pista!=null) 
-        			marcarPosicionPista(pista[0][0],pista[0][1]);
-        	});
+        		if (pista!=null) {
+        			int fila = pista[0][0];
+        			int col = pista[0][1];
+        			marcarPosicionPista(fila,col);
+        			}	
+        		});
         getContentPane().add(btnPista);
     }
 
@@ -171,21 +100,17 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
             controlesV.actualizarTiempo();
             lblTiempo.setText(formatoTiempo(controlesV.obtenerTiempoRestante()));
             if (controlesV.obtenerTiempoRestante() == 0) {
-                timer.stop();
+                detenerTimer();
                 JOptionPane.showMessageDialog(null,
                     "¡Tiempo agotado! Has perdido.",
                     "Fin del Juego", JOptionPane.WARNING_MESSAGE);
-                dispose();
-                new PantallaFin(
-                    nombre,
-                    controlesV.obtenerPuntajeFinal(),
-                    controlesV.obtenerRanking(),
-                    "Perdiste"
-                ).setVisible(true);
+                 mostrarFinDelJuego("Perdiste", controlesV.obtenerPuntajeFinal(),
+                    controlesV.obtenerRanking());
             }
         });
     }
 
+        
     private void crearGrillaDeBotones(JPanel panelDeBotones, String nombre) {
         for (int f = 0; f < matrizBotones.length; f++) {
             for (int c = 0; c < matrizBotones.length; c++) {
@@ -194,14 +119,59 @@ public class PantallaJuego extends JFrame implements ObservadorJuego {
                 boton.setBackground(Color.GRAY);
                 boton.addActionListener(e -> {
                 	controlesV.actualizarTurnos();
+                	actualizarTurnos(controlesV.obtenerTurnos());
                 	controlesG.actualizarEstadoJuego(fila, columna);
-                	actualizarBordes();
+                	limpiarBordes();
+                	
+                	if(controlesG.terminoElJuego()) {
+                		detenerTimer();
+                		mostrarFinDelJuego("Ganaste",controlesV.obtenerPuntajeFinal(),
+                                controlesV.obtenerRanking());
+                	}
+                	actualizarGrilla();
                 });
                 matrizBotones[f][c] = boton;
                 panelDeBotones.add(boton);
             }
         }
     }
+    
+    private void marcarPosicionPista(int fila, int col) {
+        limpiarBordes();
+        matrizBotones[fila][col].setBorder(BorderFactory.createLineBorder(Color.ORANGE, 3));
+    }
+    
+    private void limpiarBordes() {
+        for (int f = 0; f < matrizBotones.length; f++) {
+            for (int c = 0; c < matrizBotones[0].length; c++) {
+                matrizBotones[f][c].setBorder(null);
+            }
+        }
+    }
+
+	private void actualizarTurnos(int turnos) {
+		lblTurnos.setText("Turnos: " + turnos);
+	}
+	
+	private void mostrarFinDelJuego(String mensaje, int puntajeFinal, ArrayList<Jugador> ranking) {
+		dispose();
+	    new PantallaFin(controlesV.obtenerNombreJugador(), puntajeFinal, ranking, mensaje).setVisible(true);
+	}
+    
+    private void actualizarGrilla() {
+        for (int fila = 0; fila < matrizBotones.length; fila++) {
+            for (int col = 0; col < matrizBotones.length; col++) {
+                matrizBotones[fila][col].setBackground(
+                    controlesG.obtenerColorEnPosicion(fila, col)
+                );
+            }
+        }
+    }
+
+	private void detenerTimer() {
+		if (timer != null)
+	        timer.stop();
+	}
     
     private String formatoTiempo(int tiempo) {
         int minutos = tiempo / 60;

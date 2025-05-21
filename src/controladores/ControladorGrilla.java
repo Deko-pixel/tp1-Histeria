@@ -11,8 +11,7 @@ public class ControladorGrilla {
 	}
 	
 	public int obtenerTamanoGrilla() {
-		int tamano = juego.obtenerTamanoGrilla();
-		return tamano;
+		return juego.obtenerTamanoGrilla();
 	}
 
 	public Color obtenerColorEnPosicion(int fila, int columna) {
