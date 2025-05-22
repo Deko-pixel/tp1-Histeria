@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class GerenteGrilla {
 	private Color[][] grilla;
 	
-	private static final int[][] VECINOS = {
+	private static final int[][] DIRECCIONESVECINOS = { //Para tomar los vecinos de una casilla y no repetir codigo
 	        {-1, 0}, {1, 0}, {0, -1}, {0, 1}
 	};
 	
@@ -43,7 +43,7 @@ public class GerenteGrilla {
 	}
 	
 	private void borrarVecinos(int fila, int columna) {
-		for(int [] dir : VECINOS) {
+		for(int [] dir : DIRECCIONESVECINOS) {
 			int f = fila + dir [0];
 			int c = columna + dir [1];
 			establecerColorEnGrilla(f, c, Color.GRAY);
@@ -90,7 +90,7 @@ public class GerenteGrilla {
 	
 	private ArrayList<Color> obtenerColoresVecinos(int fila, int col) {
 	    ArrayList<Color> colores = new ArrayList<>();
-	    for (int[] dir : VECINOS) {
+	    for (int[] dir : DIRECCIONESVECINOS) {
 	        int f = fila + dir[0];
 	        int c = col + dir[1];
 	        if (!posicionInvalida(f) && !posicionInvalida(c)) {
@@ -107,7 +107,7 @@ public class GerenteGrilla {
 		Color actual =obtenerColor(fila, columna);
 		if (actual.equals(Color.GRAY) || actual==null)
 			return false;
-		for(int[] dir : VECINOS) {
+		for(int[] dir : DIRECCIONESVECINOS) {
 			int f = fila + dir[0];
 			int c = columna + dir[1];
 			if (!posicionInvalida(f) && !posicionInvalida(c)) {
