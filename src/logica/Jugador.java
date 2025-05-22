@@ -18,6 +18,8 @@ public class Jugador {
 	
 	public void calcularPuntaje(int turnos, int pistasUsadas, int tiempoTotal, int tiempoRestante) {
 		this.puntajeFinal = puntajeInicial - turnos - (pistasUsadas*50) - (tiempoTotal - tiempoRestante);
+		if (this.puntajeFinal<0)
+			this.puntajeFinal=0;
 	}
 	
 	public int obtenerPuntajeFinal() {

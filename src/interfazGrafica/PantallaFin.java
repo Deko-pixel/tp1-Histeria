@@ -13,7 +13,7 @@ public class PantallaFin extends JFrame {
 
     public PantallaFin(String nombre, int puntaje, ArrayList<Jugador> ranking, String estado) {
     	configurarVentana();
-        inicializarComponentes(nombre, estado, ranking);
+        inicializarComponentes(nombre, estado, ranking, puntaje);
     }
     
     private void configurarVentana() {
@@ -24,18 +24,20 @@ public class PantallaFin extends JFrame {
         getContentPane().setLayout(null);
     }
 
-    private void inicializarComponentes(String nombre, String estado, ArrayList<Jugador> ranking) {
-        crearEtiquetas(nombre, estado);
+    private void inicializarComponentes(String nombre, String estado, ArrayList<Jugador> ranking, int puntaje) {
+        crearEtiquetas(nombre, estado, puntaje);
         crearBotones();
         crearTablaRanking(ranking);
     }
 
-    private void crearEtiquetas(String nombre, String estado) {
+    private void crearEtiquetas(String nombre, String estado, int puntaje) {
         JLabel lblFinDelJuego = UtilidadesUI.crearEtiqueta("FIN DEL JUEGO", 24f, 230, 10, 310, 70, Color.YELLOW);
         getContentPane().add(lblFinDelJuego);
 
         JLabel lblResultado = UtilidadesUI.crearEtiqueta("¡" + estado + " " + nombre + "!", 24f, 10, 60, 766, 70, Color.YELLOW);
+        JLabel lblPuntaje = UtilidadesUI.crearEtiqueta("Puntaje: " + puntaje, 10f, 10, 95, 766, 70, Color.YELLOW);
         getContentPane().add(lblResultado);
+        getContentPane().add(lblPuntaje);
     }
 
     private void crearBotones() {
